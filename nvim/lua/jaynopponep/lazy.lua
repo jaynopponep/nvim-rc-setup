@@ -33,7 +33,37 @@ require("lazy").setup({
 			vim.o.background = "dark"
 			vim.cmd('colorscheme gruvbox')
 		end
-	}, 
+	},
+	{
+		"greggh/claude-code.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim", -- Required for git operations
+		},
+		config = function()
+			require("claude-code").setup()
+		end
+	},
+	{
+		"williamboman/mason.nvim",
+		config = function()
+			require("mason").setup()
+		end,
+	},
+	{
+		"williamboman/mason-lspconfig.nvim",
+		dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" },
+		config = function()
+			require("mason").setup()
+			require("mason-lspconfig").setup({
+				ensure_installed = { "ts_ls", "gopls" },
+				handlers = {
+					function(server_name)
+						require("lspconfig")[server_name].setup({})
+					end,
+				},
+			})
+		end,
+	},
 	install = { colorscheme = { "habamax" } },
 	checker = { enabled = true },
 })
